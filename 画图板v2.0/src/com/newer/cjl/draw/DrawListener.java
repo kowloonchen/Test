@@ -3,6 +3,7 @@ package com.newer.cjl.draw;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -14,17 +15,19 @@ import javax.swing.JPanel;
  * @author kowloon
  * 
  */
-public class DrawListener implements MouseListener {
+public class DrawListener implements MouseListener,MouseMotionListener {
 	/** 鼠标按下和释放时候的坐标 */
 	private int x1, y1, x2, y2;
 	private JPanel drawPanel;
 	private ButtonGroup shapeGroup;
+	private StatePanel statePanel;
 	private Graphics g;
-	private int type = 1;// 0表示直线 1表示矩形 2表示椭圆
+	private int type = 1;
 
-	public DrawListener(JPanel dp, ButtonGroup bg1) {
+	public DrawListener(JPanel dp, ButtonGroup bg1,StatePanel sp) {
 		drawPanel = dp;
 		shapeGroup = bg1;
+		statePanel = sp;
 	}
 
 	/** 鼠标按下的监听方法 */
@@ -36,15 +39,10 @@ public class DrawListener implements MouseListener {
 		ButtonModel bm = shapeGroup.getSelection();
 		// 获得按钮的唯一标识
 		String str = bm.getActionCommand();
-		//根据动作命令设置要绘制的形状
-		if (str.equals("0")) {
-			type = 0;
-		} else if (str.equals("1")) {
-			type = 1;
-		} else if (str.equals("2")) {
-			type = 2;
-		}
-
+		System.out.println("str:" + str);
+		// 将纯数字字符串转成int
+		type = Integer.parseInt(str);
+		
 		x1 = e.getX();
 		y1 = e.getY();
 	}
@@ -53,12 +51,12 @@ public class DrawListener implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		x2 = e.getX();
 		y2 = e.getY();
-		if (type == 0) {
+		if (type == 10) {
 			g.drawLine(x1, y1, x2, y2);
-		} else if (type == 1) {
+		} else if (type == 12) {
 			g.drawRect(x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2, x1 < x2 ? x2 - x1
 					: x1 - x2, y1 < y2 ? y2 - y1 : y1 - y2);
-		} else if (type == 2) {
+		} else if (type == 14) {
 			g.drawOval(x1 < x2 ? x1 : x2, y1 < y2 ? y1 : y2, x1 < x2 ? x2 - x1
 					: x1 - x2, y1 < y2 ? y2 - y1 : y1 - y2);
 		}
@@ -69,10 +67,27 @@ public class DrawListener implements MouseListener {
 	}
 
 	public void mouseExited(MouseEvent e) {
-
+		statePanel.setMoveStr("");
+		//让statePanel执行paint方法
+		statePanel.repaint();
 	}
 
 	public void mouseClicked(MouseEvent e) {
 
+	}
+
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void mouseMoved(MouseEvent e) {
+		int x = e.getX();
+		int y = e.getY();
+		String str = x+","+y;
+		statePanel.setMoveStr(str);
+		//让statePanel执行paint方法
+		statePanel.repaint();
+		
 	}
 }
