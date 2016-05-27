@@ -42,13 +42,10 @@ public class DrawUI {
 		JPanel center = new JPanel();
 		JPanel foot = new JPanel();
 		
-		//创建颜色对象
-		Color c = new Color(220,220,220);
-		
 		//设置面板大小和背景色
 		Dimension leftDim = new Dimension(80,1);
 		left.setPreferredSize(leftDim);
-		left.setBackground(c);
+		left.setBackground(new Color(220,220,220));
 		//给左边的面板设置边框
 		LineBorder line = new LineBorder(Color.GRAY);
 		left.setBorder(line);
@@ -57,7 +54,7 @@ public class DrawUI {
 		
 		Dimension footDim = new Dimension(1,80);
 		foot.setPreferredSize(footDim);
-		foot.setBackground(c);
+		foot.setBackground(new Color(220,220,220));
 		
 		jf.add(left,BorderLayout.WEST);
 		jf.add(center,BorderLayout.CENTER);
@@ -82,7 +79,6 @@ public class DrawUI {
 		//*****************左边形状选择面板************************************//
 		//创建形状按钮组
 		ButtonGroup shapeGroup = new ButtonGroup();
-	
 		for(int i=0;i<16;i++){
 			//创建单选按钮
 			JRadioButton btn = new JRadioButton();
@@ -108,11 +104,11 @@ public class DrawUI {
 			btn.setRolloverIcon(icon1);
 			btn.setPressedIcon(icon2);
 			btn.setSelectedIcon(icon3);
-			
-			
+
 			//添加到左边面板
 			left.add(btn);
-			if(i==6){//默认选中第一个按钮
+			
+			if(i==6){//默认选中第6个按钮
 				btn.setSelected(true);
 			}
 		}
@@ -122,7 +118,7 @@ public class DrawUI {
 		foot.setLayout(new BorderLayout());
 		//颜色选择面板
 		JPanel colorPanel = new JPanel();
-		colorPanel.setBackground(c);
+		colorPanel.setBackground(new Color(220,220,220));
 		foot.add(colorPanel,BorderLayout.CENTER);
 		
 		//状态栏面板

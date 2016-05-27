@@ -1,12 +1,18 @@
 package com.newer.cjl.draw;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.net.URL;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 /**
@@ -15,7 +21,7 @@ import javax.swing.JPanel;
  * @author kowloon
  * 
  */
-public class DrawListener implements MouseListener,MouseMotionListener {
+public class DrawListener implements MouseListener, MouseMotionListener {
 	/** 鼠标按下和释放时候的坐标 */
 	private int x1, y1, x2, y2;
 	private JPanel drawPanel;
@@ -23,8 +29,16 @@ public class DrawListener implements MouseListener,MouseMotionListener {
 	private StatePanel statePanel;
 	private Graphics g;
 	private int type = 1;
+	
+	URL url = DrawListener.class.getResource("images/cursorPen.gif");
+	ImageIcon icon = new ImageIcon(url);
+	Image img = icon.getImage();
+	Point hotSpot = new Point(31, 31);
+	
+	Toolkit tk = Toolkit.getDefaultToolkit();
+	
 
-	public DrawListener(JPanel dp, ButtonGroup bg1,StatePanel sp) {
+	public DrawListener(JPanel dp, ButtonGroup bg1, StatePanel sp) {
 		drawPanel = dp;
 		shapeGroup = bg1;
 		statePanel = sp;
@@ -35,14 +49,6 @@ public class DrawListener implements MouseListener,MouseMotionListener {
 		// 鼠标按下准备绘制图形之前，先获得允许绘制的区域Graphics
 		g = drawPanel.getGraphics();
 
-		// 获得被选中的单选按钮
-		ButtonModel bm = shapeGroup.getSelection();
-		// 获得按钮的唯一标识
-		String str = bm.getActionCommand();
-		System.out.println("str:" + str);
-		// 将纯数字字符串转成int
-		type = Integer.parseInt(str);
-		
 		x1 = e.getX();
 		y1 = e.getY();
 	}
@@ -63,12 +69,29 @@ public class DrawListener implements MouseListener,MouseMotionListener {
 	}
 
 	public void mouseEntered(MouseEvent e) {
+		// 获得被选中的单选按钮
+		ButtonModel bm = shapeGroup.getSelection();
+		// 获得按钮的唯一标识
+		String str = bm.getActionCommand();
+		System.out.println("str:" + str);
+		// 将纯数字字符串转成int
+		type = Integer.parseInt(str);
+
+		// 鼠标进入绘制区域，就根据要绘制的形状改变光标的形状
+		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+		if (type == 10) {
+			cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+		} else if (type == 6) {
+			cursor = tk.createCustomCursor(img, hotSpot, "pen");
+		}
+		drawPanel.setCursor(cursor);
 
 	}
 
 	public void mouseExited(MouseEvent e) {
 		statePanel.setMoveStr("");
-		//让statePanel执行paint方法
+		statePanel.setDragStr("");
+		// 让statePanel执行paint方法
 		statePanel.repaint();
 	}
 
@@ -77,17 +100,21 @@ public class DrawListener implements MouseListener,MouseMotionListener {
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		int x = e.getX();
+		int y = e.getY();
+		String str = (x - x1) + "," + (y - y1);
+		statePanel.setDragStr(str);
+		statePanel.repaint();
+
 	}
 
 	public void mouseMoved(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		String str = x+","+y;
+		String str = x + "," + y;
 		statePanel.setMoveStr(str);
-		//让statePanel执行paint方法
+		// 让statePanel执行paint方法
 		statePanel.repaint();
-		
+
 	}
 }
