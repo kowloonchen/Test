@@ -1,5 +1,6 @@
 package com.newer.cjl.draw;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -13,7 +14,9 @@ import java.net.URL;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 
 /**
  * 绘图的监听器，实现鼠标监听器接口 实现接口就必须要将接口中的方法全部重写
@@ -29,6 +32,12 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	private StatePanel statePanel;
 	private Graphics g;
 	private int type = 1;
+	private JLabel frontLabel;
+	private JLabel backLabel;
+	
+	private Color frontColor = Color.BLACK;//前景色
+	private Color backColor = Color.RED;//背景色 
+	
 	
 	URL url = DrawListener.class.getResource("images/cursorPen.gif");
 	ImageIcon icon = new ImageIcon(url);
@@ -38,17 +47,35 @@ public class DrawListener implements MouseListener, MouseMotionListener {
 	Toolkit tk = Toolkit.getDefaultToolkit();
 	
 
-	public DrawListener(JPanel dp, ButtonGroup bg1, StatePanel sp) {
+	public DrawListener(JPanel dp, ButtonGroup bg1, StatePanel sp,JLabel fl,JLabel bl) {
 		drawPanel = dp;
 		shapeGroup = bg1;
 		statePanel = sp;
+		frontLabel = fl;
+		backLabel = bl;
 	}
 
 	/** 鼠标按下的监听方法 */
 	public void mousePressed(MouseEvent e) {
 		// 鼠标按下准备绘制图形之前，先获得允许绘制的区域Graphics
 		g = drawPanel.getGraphics();
-
+		
+		//确定前景色和背景色
+		frontColor = frontLabel.getBackground();
+		backColor = backLabel.getBackground();
+		
+		//获得按下的是鼠标的左键还是右键
+		int button = e.getButton();
+		//确定要绘制的颜色
+		if(button==MouseEvent.BUTTON1){//如果按下的是左键
+			g.setColor(frontColor);
+		}else if(button==MouseEvent.BUTTON3){
+			g.setColor(backColor);
+		}else{
+			g.setColor(frontColor);
+		}
+		
+		
 		x1 = e.getX();
 		y1 = e.getY();
 	}
