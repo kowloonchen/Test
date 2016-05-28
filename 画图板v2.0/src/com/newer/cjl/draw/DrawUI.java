@@ -148,7 +148,7 @@ public class DrawUI {
 		colorPanel.add(selectPanel);
 
 		//创建一个选择颜色的监听器
-		ColorListener clis = new ColorListener();
+		ColorListener clis = new ColorListener(frontLabel,backLabel);
 		//基本颜色数组
 		Color[] colors = { Color.BLACK, Color.BLUE, Color.CYAN,
 				Color.DARK_GRAY, Color.GRAY, Color.GREEN, Color.LIGHT_GRAY,

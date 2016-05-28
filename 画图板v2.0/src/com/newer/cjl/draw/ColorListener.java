@@ -14,8 +14,29 @@ import javax.swing.border.LineBorder;
  * 
  */
 public class ColorListener implements MouseListener {
+	private JLabel frontLabel;
+	private JLabel backLabel;
+
+	public ColorListener(JLabel fl, JLabel bl) {
+		frontLabel = fl;
+		backLabel = bl;
+	}
 
 	public void mouseReleased(MouseEvent e) {
+		// 获得被选中控件的背景颜色
+		Object obj = e.getSource();
+		if (obj instanceof JLabel) {
+			JLabel label = (JLabel) obj;
+			Color color = label.getBackground();
+
+			int button = e.getButton();
+			if (button == MouseEvent.BUTTON1) {
+				frontLabel.setBackground(color);
+			} else if (button == MouseEvent.BUTTON3) {
+				backLabel.setBackground(color);
+			}
+
+		}
 
 	}
 
@@ -27,7 +48,7 @@ public class ColorListener implements MouseListener {
 		Object obj = e.getSource();
 		if (obj instanceof JLabel) {
 			JLabel label = (JLabel) obj;
-			label.setBorder(new LineBorder(Color.BLUE));	
+			label.setBorder(new LineBorder(Color.BLUE));
 		}
 
 	}
@@ -36,7 +57,7 @@ public class ColorListener implements MouseListener {
 		Object obj = e.getSource();
 		if (obj instanceof JLabel) {
 			JLabel label = (JLabel) obj;
-			label.setBorder(new LineBorder(Color.LIGHT_GRAY));	
+			label.setBorder(new LineBorder(Color.LIGHT_GRAY));
 		}
 	}
 
